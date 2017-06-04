@@ -27,8 +27,8 @@ namespace sgf2go {
 
     node sgf2Node(string sgf);
     string writeSgfTree(json* j);
-    void writeJsonTree(json* j, node root);
-    void writeJsonTreeMain(json* j, node root);
+    void writeJsonTree(json* j, node* root);
+    void writeJsonTreeMain(json* j, node* root);
 
 }
 
