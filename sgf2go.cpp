@@ -11,14 +11,14 @@ using namespace boost;
 using json = nlohmann::json;
 
 namespace sgf2go {
-    string writeSgfTree(json* j) {
+    string _writeSgfTree(json* j) {
         string ret;
         for (json list : *j) {
             if (list.is_array() && list.size() > 0) {
                 json first = list.at(0);
                 if (first.is_array()) {
                     ret += "(";
-                    ret += writeSgfTree(&list);
+                    ret += _writeSgfTree(&list);
                     ret += ")";
                 } else {
                     ret += ";";
@@ -37,7 +37,7 @@ namespace sgf2go {
         return ret;
     };
 
-    void writeJsonTree(json* j, node* root) {
+    void _writeJsonTree(json* j, node* root) {
         json ja = json::array();
         for (deque<string> property: root->properties) {
             string key = property[0];
@@ -52,17 +52,17 @@ namespace sgf2go {
         }
         if (root->children.size() == 1) {
             for (node child : root->children) {
-                writeJsonTree(j, &child);
+                _writeJsonTree(j, &child);
             }
         } else if (root->children.size() > 1) {
             for (node child : root->children) {
                 j->push_back(json::array());
-                writeJsonTree(&j->back(), &child);
+                _writeJsonTree(&j->back(), &child);
             }
         }
     };
 
-    void writeJsonTreeMain(json* j, node* root) {
+    void _writeJsonTreeMain(json* j, node* root) {
         json ja = json::array();
         for (deque<string> property: root->properties) {
             string key = property[0];
@@ -76,12 +76,12 @@ namespace sgf2go {
             j->push_back(ja);
         }
         for (node child : root->children) {
-            writeJsonTreeMain(j, &child);
+            _writeJsonTreeMain(j, &child);
             break;
         }
     };
 
-    node sgf2Node(string sgf) {
+    node _sgf2Node(string sgf) {
         node root;
         node* current = &root;
         stack<node*> listStack;
@@ -125,9 +125,9 @@ namespace sgf2go {
     };
 
     string sgf2json(string sgf) {
-        node root = sgf2Node(sgf);
+        node root = _sgf2Node(sgf);
         json j;
-        writeJsonTree(&j, &root);
+        _writeJsonTree(&j, &root);
         string js = j.dump();
         if (starts_with(js, "[[{")) {
             js = "[" + js + "]";
@@ -136,9 +136,9 @@ namespace sgf2go {
     };
 
     string sgf2jsonMain(string sgf) {
-        node root = sgf2Node(sgf);
+        node root = _sgf2Node(sgf);
         json j;
-        writeJsonTreeMain(&j, &root);
+        _writeJsonTreeMain(&j, &root);
         string js = j.dump();
         if (starts_with(js, "[[{")) {
             js = "[" + js + "]";
@@ -148,6 +148,6 @@ namespace sgf2go {
 
     string json2sgf(string js) {
         json j = json::parse(js);
-        return writeSgfTree(&j);
+        return _writeSgfTree(&j);
     }
 }
