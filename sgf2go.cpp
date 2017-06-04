@@ -37,9 +37,9 @@ namespace sgf2go {
         return ret;
     };
 
-    void writeJsonTree(json* j, node root) {
+    void writeJsonTree(json* j, node* root) {
         json ja = json::array();
-        for (deque<string> property: root.properties) {
+        for (deque<string> property: root->properties) {
             string key = property[0];
             property.pop_front();
             json value(property);
@@ -50,21 +50,21 @@ namespace sgf2go {
         if (ja.size() > 0) {
             j->push_back(ja);
         }
-        if (root.children.size() == 1) {
-            for (node child : root.children) {
-                writeJsonTree(j, child);
+        if (root->children.size() == 1) {
+            for (node child : root->children) {
+                writeJsonTree(j, &child);
             }
-        } else if (root.children.size() > 1) {
-            for (node child : root.children) {
+        } else if (root->children.size() > 1) {
+            for (node child : root->children) {
                 j->push_back(json::array());
-                writeJsonTree(&j->back(), child);
+                writeJsonTree(&j->back(), &child);
             }
         }
     };
 
-    void writeJsonTreeMain(json* j, node root) {
+    void writeJsonTreeMain(json* j, node* root) {
         json ja = json::array();
-        for (deque<string> property: root.properties) {
+        for (deque<string> property: root->properties) {
             string key = property[0];
             property.pop_front();
             json value(property);
@@ -75,8 +75,8 @@ namespace sgf2go {
         if (ja.size() > 0) {
             j->push_back(ja);
         }
-        for (node child : root.children) {
-            writeJsonTreeMain(j, child);
+        for (node child : root->children) {
+            writeJsonTreeMain(j, &child);
             break;
         }
     };
@@ -127,7 +127,7 @@ namespace sgf2go {
     string sgf2json(string sgf) {
         node root = sgf2Node(sgf);
         json j;
-        writeJsonTree(&j, root);
+        writeJsonTree(&j, &root);
         string js = j.dump();
         if (starts_with(js, "[[{")) {
             js = "[" + js + "]";
@@ -138,7 +138,7 @@ namespace sgf2go {
     string sgf2jsonMain(string sgf) {
         node root = sgf2Node(sgf);
         json j;
-        writeJsonTreeMain(&j, root);
+        writeJsonTreeMain(&j, &root);
         string js = j.dump();
         if (starts_with(js, "[[{")) {
             js = "[" + js + "]";
