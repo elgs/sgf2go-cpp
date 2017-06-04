@@ -2,8 +2,8 @@
 // Created by Qian Chen on 5/24/17.
 //
 
-#ifndef HELLO_SGF2GO_H
-#define HELLO_SGF2GO_H
+#ifndef SGF2GO_H
+#define SGF2GO_H
 
 #include <string>
 #include <iostream>
@@ -33,4 +33,4 @@ namespace sgf2go {
 }
 
 
-#endif //HELLO_SGF2GO_H
+#endif //SGF2GO_H
