@@ -25,10 +25,10 @@ namespace sgf2go {
     string sgf2jsonMain(string sgf);
     string json2sgf(string js);
 
-    node sgf2Node(string sgf);
-    string writeSgfTree(json* j);
-    void writeJsonTree(json* j, node* root);
-    void writeJsonTreeMain(json* j, node* root);
+    node _sgf2Node(string sgf);
+    string _writeSgfTree(json* j);
+    void _writeJsonTree(json* j, node* root);
+    void _writeJsonTreeMain(json* j, node* root);
 
 }
 
