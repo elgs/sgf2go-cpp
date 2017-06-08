@@ -39,7 +39,7 @@ namespace sgf2go {
 
     void _writeJsonTree(json* j, node* root) {
         json ja = json::array();
-        for (deque<string> property: root->properties) {
+        for (deque<string>& property: root->properties) {
             string key = property[0];
             property.pop_front();
             json value(property);
@@ -51,11 +51,11 @@ namespace sgf2go {
             j->push_back(ja);
         }
         if (root->children.size() == 1) {
-            for (node child : root->children) {
+            for (node& child : root->children) {
                 _writeJsonTree(j, &child);
             }
         } else if (root->children.size() > 1) {
-            for (node child : root->children) {
+            for (node& child : root->children) {
                 j->push_back(json::array());
                 _writeJsonTree(&j->back(), &child);
             }
@@ -64,7 +64,7 @@ namespace sgf2go {
 
     void _writeJsonTreeMain(json* j, node* root) {
         json ja = json::array();
-        for (deque<string> property: root->properties) {
+        for (deque<string>& property: root->properties) {
             string key = property[0];
             property.pop_front();
             json value(property);
@@ -75,7 +75,7 @@ namespace sgf2go {
         if (ja.size() > 0) {
             j->push_back(ja);
         }
-        for (node child : root->children) {
+        for (node& child : root->children) {
             _writeJsonTreeMain(j, &child);
             break;
         }
@@ -89,7 +89,7 @@ namespace sgf2go {
         string buf;
 
         for (size_t i = 0; i < sgf.length(); ++i) {
-            char a = sgf.at(i);
+            char& a = sgf.at(i);
             if (inSqBracket) {
                 if (a == ']' && sgf.at(i - 1) != '\\') {
                     inSqBracket = false;
